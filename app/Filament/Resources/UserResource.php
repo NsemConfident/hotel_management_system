@@ -51,7 +51,15 @@ class UserResource extends Resource
                     ->relationship('role', 'name')
                     ->searchable()
                     ->preload()
-                    ->required(),
+                    ->required()
+                    ->options(function () {
+                        $roles = \App\Models\Role::query();
+                        // Managers cannot assign admin role
+                        if (auth()->user()?->isManager() && !auth()->user()?->isAdmin()) {
+                            $roles->where('slug', '!=', \App\Models\Role::ADMIN);
+                        }
+                        return $roles->pluck('name', 'id');
+                    }),
                 Forms\Components\DateTimePicker::make('email_verified_at')
                     ->label('Email Verified At'),
                 Forms\Components\TextInput::make('password')
@@ -111,12 +119,15 @@ class UserResource extends Resource
                     ->query(fn ($query) => $query->whereNotNull('email_verified_at')),
             ])
             ->actions([
-                Actions\EditAction::make(),
-                Actions\DeleteAction::make(),
+                Actions\EditAction::make()
+                    ->visible(fn ($record) => auth()->user()?->isAdmin() || ($record->role?->slug !== \App\Models\Role::ADMIN)),
+                Actions\DeleteAction::make()
+                    ->visible(fn ($record) => auth()->user()?->isAdmin() && $record->role?->slug !== \App\Models\Role::ADMIN && $record->id !== auth()->id()),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
-                    Actions\DeleteBulkAction::make(),
+                    Actions\DeleteBulkAction::make()
+                        ->visible(fn () => auth()->user()?->isAdmin() ?? false),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');

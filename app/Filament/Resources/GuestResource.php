@@ -179,13 +179,17 @@ class GuestResource extends Resource
                     ->action(function ($record) {
                         $record->update(['is_vip' => !$record->is_vip]);
                     }),
-                Actions\EditAction::make(),
-                Actions\ViewAction::make(),
-                Actions\DeleteAction::make(),
+                Actions\EditAction::make()
+                    ->visible(fn ($record) => auth()->user()?->can('update', $record)),
+                Actions\ViewAction::make()
+                    ->visible(fn ($record) => auth()->user()?->can('view', $record)),
+                Actions\DeleteAction::make()
+                    ->visible(fn ($record) => auth()->user()?->can('delete', $record)),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
-                    Actions\DeleteBulkAction::make(),
+                    Actions\DeleteBulkAction::make()
+                        ->visible(fn () => auth()->user()?->can('deleteAny', \App\Models\Guest::class) ?? false),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');

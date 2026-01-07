@@ -125,12 +125,15 @@ class RoomResource extends Resource
                     ->label('Room Type'),
             ])
             ->actions([
-                Actions\EditAction::make(),
-                Actions\DeleteAction::make(),
+                Actions\EditAction::make()
+                    ->visible(fn ($record) => auth()->user()?->can('update', $record)),
+                Actions\DeleteAction::make()
+                    ->visible(fn ($record) => auth()->user()?->can('delete', $record)),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
-                    Actions\DeleteBulkAction::make(),
+                    Actions\DeleteBulkAction::make()
+                        ->visible(fn () => auth()->user()?->can('deleteAny', Room::class) ?? false),
                 ]),
             ]);
     }
