@@ -30,3 +30,26 @@ Route::middleware(['auth'])->group(function () {
         )
         ->name('two-factor.show');
 });
+
+// Guest Portal Routes
+Route::prefix('guest')->name('guest.')->group(function () {
+    // Authentication routes (public)
+    Route::get('/login', [App\Http\Controllers\Guest\GuestAuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [App\Http\Controllers\Guest\GuestAuthController::class, 'login']);
+    Route::get('/register', [App\Http\Controllers\Guest\GuestAuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [App\Http\Controllers\Guest\GuestAuthController::class, 'register']);
+    Route::post('/logout', [App\Http\Controllers\Guest\GuestAuthController::class, 'logout'])->name('logout');
+
+    // Protected routes (require guest authentication)
+    Route::middleware(['guest.auth'])->group(function () {
+        Route::get('/dashboard', [App\Http\Controllers\Guest\GuestController::class, 'dashboard'])->name('dashboard');
+        Route::get('/bookings', [App\Http\Controllers\Guest\GuestController::class, 'bookings'])->name('bookings.index');
+        Route::get('/bookings/create', [App\Http\Controllers\Guest\GuestController::class, 'createBooking'])->name('bookings.create');
+        Route::post('/bookings', [App\Http\Controllers\Guest\GuestController::class, 'storeBooking'])->name('bookings.store');
+        Route::get('/bookings/{booking}', [App\Http\Controllers\Guest\GuestController::class, 'showBooking'])->name('bookings.show');
+        Route::post('/bookings/{booking}/cancel', [App\Http\Controllers\Guest\GuestController::class, 'cancelBooking'])->name('bookings.cancel');
+        Route::get('/profile', [App\Http\Controllers\Guest\GuestController::class, 'profile'])->name('profile');
+        Route::post('/profile', [App\Http\Controllers\Guest\GuestController::class, 'updateProfile'])->name('profile.update');
+        Route::get('/api/available-rooms', [App\Http\Controllers\Guest\GuestController::class, 'getAvailableRooms'])->name('api.available-rooms');
+    });
+});
