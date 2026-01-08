@@ -1,0 +1,12 @@
+# Email Configuration (Lines 37-44 in .env)
+# Replace these values with your actual Mailtrap credentials
+
+MAIL_MAILER=smtp
+MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=54ea79ac7b36cf
+MAIL_PASSWORD=your_full_mailtrap_password_here
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=noreply@yourhotel.com
+MAIL_FROM_NAME="${APP_NAME}"
+

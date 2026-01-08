@@ -38,132 +38,132 @@ class BookingResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
-                Forms\Components\Section::make('Booking Details')
-                    ->schema([
-                        Forms\Components\Select::make('guest_id')
-                            ->relationship('guest', 'first_name')
-                            ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->first_name} {$record->last_name}" . ($record->email ? " ({$record->email})" : ''))
+                Forms\Components\Select::make('guest_id')
+                    ->label('Guest')
+                    ->relationship('guest', 'first_name')
+                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->first_name} {$record->last_name}" . ($record->email ? " ({$record->email})" : ''))
+                    ->required()
+                    ->searchable(['first_name', 'last_name', 'email', 'phone'])
+                    ->preload()
+                    ->createOptionForm([
+                        Forms\Components\TextInput::make('first_name')
                             ->required()
-                            ->searchable(['first_name', 'last_name', 'email', 'phone'])
-                            ->preload()
-                            ->createOptionForm([
-                                Forms\Components\TextInput::make('first_name')
-                                    ->required()
-                                    ->maxLength(255),
-                                Forms\Components\TextInput::make('last_name')
-                                    ->required()
-                                    ->maxLength(255),
-                                Forms\Components\TextInput::make('email')
-                                    ->email()
-                                    ->maxLength(255),
-                                Forms\Components\TextInput::make('phone')
-                                    ->tel()
-                                    ->maxLength(255),
-                                Forms\Components\TextInput::make('id_number')
-                                    ->maxLength(255),
-                                Forms\Components\Textarea::make('address'),
-                            ]),
-                        Forms\Components\Select::make('room_id')
-                            ->relationship('room', 'room_number')
-                            ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->room_number} - {$record->roomType->name} (Floor {$record->floor}) - " . ucfirst($record->status))
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('last_name')
                             ->required()
-                            ->searchable()
-                            ->preload()
-                            ->live()
-                            ->afterStateUpdated(function ($state, Forms\Set $set, Forms\Get $get) {
-                                if ($state) {
-                                    $room = Room::find($state);
-                                    if ($room && $room->roomType) {
-                                        $checkIn = $get('check_in_date');
-                                        $checkOut = $get('check_out_date');
-                                        if ($checkIn && $checkOut) {
-                                            $days = \Carbon\Carbon::parse($checkIn)->diffInDays(\Carbon\Carbon::parse($checkOut));
-                                            if ($days > 0) {
-                                                $set('total_amount', $room->roomType->base_price * $days);
-                                            }
-                                        }
-                                    }
-                                }
-                            }),
-                        Forms\Components\DatePicker::make('check_in_date')
-                            ->required()
-                            ->native(false)
-                            ->displayFormat('Y-m-d')
-                            ->minDate(now())
-                            ->live()
-                            ->afterStateUpdated(function ($state, Forms\Set $set, Forms\Get $get) {
-                                $checkOut = $get('check_out_date');
-                                if ($state && $checkOut) {
-                                    $checkOutDate = \Carbon\Carbon::parse($checkOut);
-                                    $checkInDate = \Carbon\Carbon::parse($state);
-                                    if ($checkOutDate->lte($checkInDate)) {
-                                        $set('check_out_date', $checkInDate->copy()->addDay());
-                                    }
-                                }
-                                // Recalculate total
-                                $roomId = $get('room_id');
-                                if ($roomId && $checkOut) {
-                                    $room = Room::find($roomId);
-                                    if ($room && $room->roomType) {
-                                        $days = \Carbon\Carbon::parse($state)->diffInDays(\Carbon\Carbon::parse($checkOut));
-                                        if ($days > 0) {
-                                            $set('total_amount', $room->roomType->base_price * $days);
-                                        }
-                                    }
-                                }
-                            }),
-                        Forms\Components\DatePicker::make('check_out_date')
-                            ->required()
-                            ->native(false)
-                            ->displayFormat('Y-m-d')
-                            ->minDate(fn (Forms\Get $get) => $get('check_in_date') ? \Carbon\Carbon::parse($get('check_in_date'))->addDay() : now()->addDay())
-                            ->live()
-                            ->afterStateUpdated(function ($state, Forms\Set $set, Forms\Get $get) {
-                                // Recalculate total
-                                $roomId = $get('room_id');
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('email')
+                            ->email()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('phone')
+                            ->tel()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('id_number')
+                            ->maxLength(255),
+                        Forms\Components\Textarea::make('address'),
+                    ])
+                    ->columnSpan(2),
+                Forms\Components\Select::make('room_id')
+                    ->label('Room')
+                    ->relationship('room', 'room_number')
+                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->room_number} - {$record->roomType->name} (Floor {$record->floor}) - " . ucfirst($record->status))
+                    ->required()
+                    ->searchable()
+                    ->preload()
+                    ->live()
+                    ->columnSpan(2)
+                    ->afterStateUpdated(function ($state, $set, $get) {
+                        if ($state) {
+                            $room = Room::find($state);
+                            if ($room && $room->roomType) {
                                 $checkIn = $get('check_in_date');
-                                if ($roomId && $checkIn && $state) {
-                                    $room = Room::find($roomId);
-                                    if ($room && $room->roomType) {
-                                        $days = \Carbon\Carbon::parse($checkIn)->diffInDays(\Carbon\Carbon::parse($state));
-                                        if ($days > 0) {
-                                            $set('total_amount', $room->roomType->base_price * $days);
-                                        }
+                                $checkOut = $get('check_out_date');
+                                if ($checkIn && $checkOut) {
+                                    $days = \Carbon\Carbon::parse($checkIn)->diffInDays(\Carbon\Carbon::parse($checkOut));
+                                    if ($days > 0) {
+                                        $set('total_amount', $room->roomType->base_price * $days);
                                     }
                                 }
-                            }),
+                            }
+                        }
+                    }),
+                Forms\Components\DatePicker::make('check_in_date')
+                    ->required()
+                    ->native(false)
+                    ->displayFormat('Y-m-d')
+                    ->minDate(now())
+                    ->live()
+                    ->afterStateUpdated(function ($state, $set, $get) {
+                        $checkOut = $get('check_out_date');
+                        if ($state && $checkOut) {
+                            $checkOutDate = \Carbon\Carbon::parse($checkOut);
+                            $checkInDate = \Carbon\Carbon::parse($state);
+                            if ($checkOutDate->lte($checkInDate)) {
+                                $set('check_out_date', $checkInDate->copy()->addDay());
+                            }
+                        }
+                        // Recalculate total
+                        $roomId = $get('room_id');
+                        if ($roomId && $checkOut) {
+                            $room = Room::find($roomId);
+                            if ($room && $room->roomType) {
+                                $days = \Carbon\Carbon::parse($state)->diffInDays(\Carbon\Carbon::parse($checkOut));
+                                if ($days > 0) {
+                                    $set('total_amount', $room->roomType->base_price * $days);
+                                }
+                            }
+                        }
+                    }),
+                Forms\Components\DatePicker::make('check_out_date')
+                    ->required()
+                    ->native(false)
+                    ->displayFormat('Y-m-d')
+                    ->minDate(fn ($get) => $get('check_in_date') ? \Carbon\Carbon::parse($get('check_in_date'))->addDay() : now()->addDay())
+                    ->live()
+                    ->afterStateUpdated(function ($state, $set, $get) {
+                        // Recalculate total
+                        $roomId = $get('room_id');
+                        $checkIn = $get('check_in_date');
+                        if ($roomId && $checkIn && $state) {
+                            $room = Room::find($roomId);
+                            if ($room && $room->roomType) {
+                                $days = \Carbon\Carbon::parse($checkIn)->diffInDays(\Carbon\Carbon::parse($state));
+                                if ($days > 0) {
+                                    $set('total_amount', $room->roomType->base_price * $days);
+                                }
+                            }
+                        }
+                    }),
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'reserved' => 'Reserved',
+                        'checked_in' => 'Checked In',
+                        'checked_out' => 'Checked Out',
+                        'cancelled' => 'Cancelled',
                     ])
-                    ->columns(2),
-                Forms\Components\Section::make('Status & Payment')
-                    ->schema([
-                        Forms\Components\Select::make('status')
-                            ->options([
-                                'reserved' => 'Reserved',
-                                'checked_in' => 'Checked In',
-                                'checked_out' => 'Checked Out',
-                                'cancelled' => 'Cancelled',
-                            ])
-                            ->required()
-                            ->default('reserved'),
-                        Forms\Components\TextInput::make('total_amount')
-                            ->numeric()
-                            ->prefix('$')
-                            ->step(0.01)
-                            ->required()
-                            ->default(0),
-                        Forms\Components\TextInput::make('amount_paid')
-                            ->numeric()
-                            ->prefix('$')
-                            ->step(0.01)
-                            ->default(0)
-                            ->disabled()
-                            ->dehydrated(),
-                        Forms\Components\Textarea::make('notes')
-                            ->maxLength(65535)
-                            ->columnSpanFull(),
-                    ])
-                    ->columns(3),
-            ]);
+                    ->required()
+                    ->default('reserved'),
+                Forms\Components\TextInput::make('total_amount')
+                    ->label('Total Amount')
+                    ->numeric()
+                    ->prefix('$')
+                    ->step(0.01)
+                    ->required()
+                    ->default(0),
+                Forms\Components\TextInput::make('amount_paid')
+                    ->label('Amount Paid')
+                    ->numeric()
+                    ->prefix('$')
+                    ->step(0.01)
+                    ->default(0)
+                    ->disabled()
+                    ->dehydrated(),
+                Forms\Components\Textarea::make('notes')
+                    ->label('Notes / Special Requests')
+                    ->maxLength(65535)
+                    ->columnSpanFull(),
+            ])
+            ->columns(2);
     }
 
     public static function table(Table $table): Table

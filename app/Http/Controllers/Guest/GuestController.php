@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
+use App\Mail\BookingCancellation;
+use App\Mail\BookingConfirmation;
 use App\Models\Booking;
 use App\Models\Guest;
 use App\Models\Room;
 use App\Models\RoomType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 
 class GuestController extends Controller
@@ -155,8 +158,19 @@ class GuestController extends Controller
             }
         }
 
+        // Load relationships for email
+        $booking->load(['guest', 'room.roomType']);
+
+        // Send booking confirmation email
+        try {
+            Mail::to($guest->email)->send(new BookingConfirmation($booking));
+        } catch (\Exception $e) {
+            // Log error but don't fail the booking
+            \Log::error('Failed to send booking confirmation email: ' . $e->getMessage());
+        }
+
         return redirect()->route('guest.bookings.show', $booking)
-            ->with('success', 'Booking created successfully! Your booking reference is #' . $booking->id);
+            ->with('success', 'Booking created successfully! Your booking reference is #' . $booking->id . '. A confirmation email has been sent to ' . $guest->email);
     }
 
     public function cancelBooking(Booking $booking)
@@ -179,13 +193,30 @@ class GuestController extends Controller
             $booking->room->update(['status' => 'available']);
         }
 
-        return back()->with('success', 'Booking cancelled successfully.');
+        // Load relationships for email
+        $booking->load(['guest', 'room.roomType']);
+
+        // Send cancellation email
+        try {
+            Mail::to($guest->email)->send(new BookingCancellation($booking));
+        } catch (\Exception $e) {
+            // Log error but don't fail the cancellation
+            \Log::error('Failed to send booking cancellation email: ' . $e->getMessage());
+        }
+
+        return back()->with('success', 'Booking cancelled successfully. A confirmation email has been sent to ' . $guest->email);
     }
 
     public function profile()
     {
         $guest = $this->getGuest();
         return view('guest.profile', compact('guest'));
+    }
+
+    public function editProfile()
+    {
+        $guest = $this->getGuest();
+        return view('guest.profile.edit', compact('guest'));
     }
 
     public function updateProfile(Request $request)
@@ -206,7 +237,7 @@ class GuestController extends Controller
 
         Session::put('guest_name', $guest->full_name);
 
-        return back()->with('success', 'Profile updated successfully!');
+        return redirect()->route('guest.profile')->with('success', 'Profile updated successfully!');
     }
 
     public function getAvailableRooms(Request $request)
