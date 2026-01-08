@@ -22,7 +22,7 @@
     </aside>
     <div class="flex-1 flex flex-col relative ml-64">
         <!-- Navbar -->
-        <header class="bg-white dark:bg-gray-800 shadow fixed top-0 right-0 left-64 z-10 h-12 transition-colors duration-200">
+        <header class="bg-white dark:bg-gray-800 shadow fixed top-0 right-0 left-64 z-10 transition-colors duration-200">
             @include('guest.partials.nav')
         </header>
          <!-- Page Content -->
@@ -69,8 +69,42 @@
             }
         }
         
-        // Make function globally available
+        // Profile dropdown toggle functionality
+        function toggleProfileDropdown() {
+            const menu = document.getElementById('profile-menu');
+            const icon = document.getElementById('dropdown-icon');
+            
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden', 'opacity-0', 'scale-95');
+                menu.classList.add('opacity-100', 'scale-100');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                menu.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => {
+                    menu.classList.add('hidden');
+                }, 200);
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('profile-dropdown');
+            const menu = document.getElementById('profile-menu');
+            const icon = document.getElementById('dropdown-icon');
+            
+            if (dropdown && !dropdown.contains(event.target) && !menu.classList.contains('hidden')) {
+                menu.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => {
+                    menu.classList.add('hidden');
+                }, 200);
+                icon.style.transform = 'rotate(0deg)';
+            }
+        });
+        
+        // Make functions globally available
         window.toggleDarkMode = toggleDarkMode;
+        window.toggleProfileDropdown = toggleProfileDropdown;
     </script>
 </body>
 </html>

@@ -127,4 +127,14 @@ class Guest extends Model
         }
         return Hash::check($password, $this->password);
     }
+
+    /**
+     * Get the guest's initials
+     */
+    public function initials(): string
+    {
+        $firstInitial = strtoupper(substr($this->first_name, 0, 1));
+        $lastInitial = strtoupper(substr($this->last_name, 0, 1));
+        return $firstInitial . $lastInitial;
+    }
 }
