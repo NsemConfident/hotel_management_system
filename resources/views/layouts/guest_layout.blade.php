@@ -7,17 +7,17 @@
     <title>@yield('title', 'Dashboard')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
-    <aside class="w-64 bg-gray-900 text-white h-screen fixed left-0 top-0 overflow-y-auto">
+<body class="bg-gray-50">
+    <aside class="w-64 bg-gray-900 text-white h-screen fixed left-0 top-0 overflow-y-auto z-20">
         @include('guest.partials.sidebar')
     </aside>
-    <div class="flex-1 flex flex-col relative">
+    <div class="flex-1 flex flex-col relative ml-64">
         <!-- Navbar -->
-        <header class="bg-white shadow top-0 fixed right-0 left-64 z-10">
+        <header class="bg-white shadow fixed top-0 right-0 left-64 z-10 h-12">
             @include('guest.partials.nav')
         </header>
          <!-- Page Content -->
-          <main class="flex-1 p-6 ml-64 mt-12">
+          <main class="flex-1 p-6 mt-12">
              <!-- Flash Messages -->
              @if(session('success'))
                  <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
