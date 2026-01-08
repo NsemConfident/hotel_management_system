@@ -14,6 +14,7 @@ class Room extends Model
         'room_number',
         'floor',
         'status',
+        'image',
     ];
 
     public function roomType()

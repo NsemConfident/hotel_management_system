@@ -74,13 +74,36 @@ class RoomResource extends Resource
                     ])
                     ->required()
                     ->default('available'),
-            ]);
+                Forms\Components\FileUpload::make('image')
+                    ->label('Room Image')
+                    ->image()
+                    ->imageEditor()
+                    ->imageEditorAspectRatios([
+                        '16:9',
+                        '4:3',
+                        '1:1',
+                    ])
+                    ->directory('rooms')
+                    ->visibility('public')
+                    ->disk('public')
+                    ->maxSize(5120) // 5MB
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                    ->helperText('Upload a room image (max 5MB). Supported formats: JPEG, PNG, WebP.')
+                    ->columnSpanFull(),
+            ])
+            ->columns(2);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('image')
+                    ->label('Image')
+                    ->disk('public')
+                    ->circular()
+                    ->size(60)
+                    ->extraAttributes(['class' => 'object-cover']),
                 Tables\Columns\TextColumn::make('room_number')
                     ->searchable()
                     ->sortable()
