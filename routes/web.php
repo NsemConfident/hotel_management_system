@@ -51,6 +51,8 @@ Route::prefix('guest')->name('guest.')->group(function () {
         Route::get('/profile', [App\Http\Controllers\Guest\GuestController::class, 'profile'])->name('profile');
         Route::get('/profile/edit', [App\Http\Controllers\Guest\GuestController::class, 'editProfile'])->name('profile.edit');
         Route::post('/profile', [App\Http\Controllers\Guest\GuestController::class, 'updateProfile'])->name('profile.update');
+        Route::get('/profile/password', [App\Http\Controllers\Guest\GuestController::class, 'showPasswordForm'])->name('profile.password');
+        Route::post('/profile/password', [App\Http\Controllers\Guest\GuestController::class, 'updatePassword'])->name('profile.password.update');
         Route::get('/api/available-rooms', [App\Http\Controllers\Guest\GuestController::class, 'getAvailableRooms'])->name('api.available-rooms');
     });
 });

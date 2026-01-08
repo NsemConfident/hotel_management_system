@@ -1,38 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('title', 'Dashboard')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script>
+        // Initialize dark mode from localStorage
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
 </head>
-<body class="bg-gray-50">
-    <aside class="w-64 bg-gray-900 text-white h-screen fixed left-0 top-0 overflow-y-auto z-20">
+<body class="bg-gray-50 dark:bg-gray-900 min-h-full transition-colors duration-200">
+    <aside class="w-64 bg-gray-900 dark:bg-gray-800 text-white h-screen fixed left-0 top-0 overflow-y-auto z-20 transition-colors duration-200">
         @include('guest.partials.sidebar')
     </aside>
     <div class="flex-1 flex flex-col relative ml-64">
         <!-- Navbar -->
-        <header class="bg-white shadow fixed top-0 right-0 left-64 z-10 h-12">
+        <header class="bg-white dark:bg-gray-800 shadow fixed top-0 right-0 left-64 z-10 h-12 transition-colors duration-200">
             @include('guest.partials.nav')
         </header>
          <!-- Page Content -->
           <main class="flex-1 p-6 mt-12">
              <!-- Flash Messages -->
              @if(session('success'))
-                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                 <div class="bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-700 text-green-700 dark:text-green-300 px-4 py-3 rounded relative mb-4" role="alert">
                      <span class="block sm:inline">{{ session('success') }}</span>
                  </div>
              @endif
 
              @if(session('error'))
-                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                 <div class="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-300 px-4 py-3 rounded relative mb-4" role="alert">
                      <span class="block sm:inline">{{ session('error') }}</span>
                  </div>
              @endif
 
              @if($errors->any())
-                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                 <div class="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-300 px-4 py-3 rounded relative mb-4" role="alert">
                      <ul class="list-disc list-inside">
                          @foreach($errors->all() as $error)
                              <li>{{ $error }}</li>
@@ -44,5 +53,24 @@
              @yield('content')
          </main>
     </div>
+    
+    <script>
+        // Dark mode toggle functionality
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const isDark = html.classList.contains('dark');
+            
+            if (isDark) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        
+        // Make function globally available
+        window.toggleDarkMode = toggleDarkMode;
+    </script>
 </body>
 </html>

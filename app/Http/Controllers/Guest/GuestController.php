@@ -266,5 +266,32 @@ class GuestController extends Controller
 
         return response()->json($availableRooms);
     }
+
+    public function showPasswordForm()
+    {
+        $guest = $this->getGuest();
+        return view('guest.profile.password', compact('guest'));
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $guest = $this->getGuest();
+
+        $validated = $request->validate([
+            'current_password' => 'required|string',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        // Verify current password
+        if (!$guest->verifyPassword($validated['current_password'])) {
+            return back()->withErrors(['current_password' => 'The current password is incorrect.']);
+        }
+
+        // Update password
+        $guest->password = $validated['password'];
+        $guest->save();
+
+        return redirect()->route('guest.profile')->with('success', 'Password updated successfully!');
+    }
 }
 

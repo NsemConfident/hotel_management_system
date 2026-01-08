@@ -20,14 +20,12 @@ class GuestAuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'id_number' => 'required|string',
+            'password' => 'required|string',
         ]);
 
-        $guest = Guest::where('email', $request->email)
-            ->where('id_number', $request->id_number)
-            ->first();
+        $guest = Guest::where('email', $request->email)->first();
 
-        if (!$guest) {
+        if (!$guest || !$guest->verifyPassword($request->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials do not match our records.'],
             ]);
@@ -52,6 +50,7 @@ class GuestAuthController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:guests,email',
+            'password' => 'required|string|min:8|confirmed',
             'phone' => 'required|string|max:255',
             'id_number' => 'required|string|unique:guests,id_number',
             'address' => 'nullable|string',

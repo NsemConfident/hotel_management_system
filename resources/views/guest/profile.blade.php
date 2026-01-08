@@ -6,84 +6,92 @@
 <div class="max-w-8xl mx-auto py-6 sm:px-6 lg:px-8">
     <div class="px-4 py-6 sm:px-0">
         <div class="mb-6 flex justify-between items-center">
-            <h1 class="text-3xl font-bold text-gray-900">My Profile</h1>
-            <a href="{{ route('guest.profile.edit') }}" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 flex items-center">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                Edit Profile
-            </a>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">My Profile</h1>
+            <div class="flex gap-3">
+                <a href="{{ route('guest.profile.password') }}" class="bg-gray-600 dark:bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700 dark:hover:bg-gray-600 flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                    </svg>
+                    Change Password
+                </a>
+                <a href="{{ route('guest.profile.edit') }}" class="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 dark:hover:bg-blue-800 flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    Edit Profile
+                </a>
+            </div>
         </div>
 
-        <div class="bg-white shadow rounded-lg overflow-hidden">
+        <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden transition-colors duration-200">
             <div class="px-6 py-5 space-y-6">
                 <!-- Personal Information Section -->
                 <div>
-                    <h2 class="text-lg font-medium text-gray-900 mb-4">Personal Information</h2>
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Personal Information</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-gray-500">First Name</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $guest->first_name }}</p>
+                            <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">First Name</label>
+                            <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ $guest->first_name }}</p>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-500">Last Name</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $guest->last_name }}</p>
+                            <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Last Name</label>
+                            <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ $guest->last_name }}</p>
                         </div>
                     </div>
 
                     <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-500">Email</label>
-                        <p class="mt-1 text-sm text-gray-900">{{ $guest->email }}</p>
+                        <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Email</label>
+                        <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ $guest->email }}</p>
                     </div>
 
                     <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-500">Phone</label>
-                        <p class="mt-1 text-sm text-gray-900">{{ $guest->phone ?? 'Not provided' }}</p>
+                        <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Phone</label>
+                        <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ $guest->phone ?? 'Not provided' }}</p>
                     </div>
 
                     @if($guest->address)
                     <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-500">Address</label>
-                        <p class="mt-1 text-sm text-gray-900">{{ $guest->address }}</p>
+                        <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Address</label>
+                        <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ $guest->address }}</p>
                     </div>
                     @endif
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                         @if($guest->date_of_birth)
                         <div>
-                            <label class="block text-sm font-medium text-gray-500">Date of Birth</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $guest->date_of_birth->format('F d, Y') }}</p>
+                            <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Date of Birth</label>
+                            <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ $guest->date_of_birth->format('F d, Y') }}</p>
                         </div>
                         @endif
 
                         @if($guest->nationality)
                         <div>
-                            <label class="block text-sm font-medium text-gray-500">Nationality</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $guest->nationality }}</p>
+                            <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Nationality</label>
+                            <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ $guest->nationality }}</p>
                         </div>
                         @endif
                     </div>
 
                     @if($guest->preferred_language)
                     <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-500">Preferred Language</label>
-                        <p class="mt-1 text-sm text-gray-900">{{ $guest->preferred_language }}</p>
+                        <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Preferred Language</label>
+                        <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ $guest->preferred_language }}</p>
                     </div>
                     @endif
                 </div>
 
                 <!-- Loyalty Information Section -->
-                <div class="border-t border-gray-200 pt-6" id="loyalty">
-                    <h2 class="text-lg font-medium text-gray-900 mb-4">Loyalty Information</h2>
+                <div class="border-t border-gray-200 dark:border-gray-700 pt-6" id="loyalty">
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Loyalty Information</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-gray-500">Loyalty Points</label>
-                            <p class="mt-1 text-2xl font-bold text-gray-900">{{ number_format($guest->loyalty_points) }}</p>
+                            <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Loyalty Points</label>
+                            <p class="mt-1 text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($guest->loyalty_points) }}</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-500">Loyalty Tier</label>
-                            <p class="mt-1 text-lg font-semibold text-blue-600">{{ $guest->loyalty_tier }}</p>
+                            <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Loyalty Tier</label>
+                            <p class="mt-1 text-lg font-semibold text-blue-600 dark:text-blue-400">{{ $guest->loyalty_tier }}</p>
                         </div>
                     </div>
                     @if($guest->is_vip)
@@ -99,20 +107,20 @@
                 </div>
 
                 <!-- Account Statistics Section -->
-                <div class="border-t border-gray-200 pt-6">
-                    <h2 class="text-lg font-medium text-gray-900 mb-4">Account Statistics</h2>
+                <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Account Statistics</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-gray-500">Total Bookings</label>
-                            <p class="mt-1 text-xl font-bold text-gray-900">{{ $guest->bookings()->count() }}</p>
+                            <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Total Bookings</label>
+                            <p class="mt-1 text-xl font-bold text-gray-900 dark:text-white">{{ $guest->bookings()->count() }}</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-500">Total Spent</label>
-                            <p class="mt-1 text-xl font-bold text-gray-900">${{ number_format($guest->total_spent, 2) }}</p>
+                            <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Total Spent</label>
+                            <p class="mt-1 text-xl font-bold text-gray-900 dark:text-white">${{ number_format($guest->total_spent, 2) }}</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-500">Total Nights</label>
-                            <p class="mt-1 text-xl font-bold text-gray-900">{{ $guest->total_nights }}</p>
+                            <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Total Nights</label>
+                            <p class="mt-1 text-xl font-bold text-gray-900 dark:text-white">{{ $guest->total_nights }}</p>
                         </div>
                     </div>
                 </div>

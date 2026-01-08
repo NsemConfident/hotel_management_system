@@ -67,11 +67,24 @@
                             placeholder="Phone number" value="{{ old('phone') }}">
                     </div>
                     <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input id="password" name="password" type="password" required minlength="8"
+                            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            placeholder="Password (min. 8 characters)">
+                        <p class="mt-1 text-xs text-gray-500">Must be at least 8 characters long</p>
+                    </div>
+                    <div>
+                        <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+                        <input id="password_confirmation" name="password_confirmation" type="password" required minlength="8"
+                            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            placeholder="Confirm Password">
+                    </div>
+                    <div>
                         <label for="id_number" class="block text-sm font-medium text-gray-700">ID Number</label>
                         <input id="id_number" name="id_number" type="text" required
                             class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                             placeholder="ID Number" value="{{ old('id_number') }}">
-                        <p class="mt-1 text-xs text-gray-500">Used for login authentication</p>
+                        <p class="mt-1 text-xs text-gray-500">For identification purposes</p>
                     </div>
                     <div>
                         <label for="address" class="block text-sm font-medium text-gray-700">Address (Optional)</label>

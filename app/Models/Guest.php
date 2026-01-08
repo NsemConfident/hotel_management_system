@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
 class Guest extends Model
 {
@@ -13,6 +14,7 @@ class Guest extends Model
         'first_name',
         'last_name',
         'email',
+        'password',
         'phone',
         'id_number',
         'address',
@@ -25,6 +27,10 @@ class Guest extends Model
         'special_requests',
         'notes',
         'last_visit_at',
+    ];
+
+    protected $hidden = [
+        'password',
     ];
 
     protected $casts = [
@@ -99,5 +105,26 @@ class Guest extends Model
     {
         // 1 point per dollar spent
         return (int) $booking->total_amount;
+    }
+
+    /**
+     * Set the password attribute (hash it automatically)
+     */
+    public function setPasswordAttribute($value)
+    {
+        if ($value) {
+            $this->attributes['password'] = Hash::make($value);
+        }
+    }
+
+    /**
+     * Verify password
+     */
+    public function verifyPassword($password): bool
+    {
+        if (!$this->password) {
+            return false;
+        }
+        return Hash::check($password, $this->password);
     }
 }
