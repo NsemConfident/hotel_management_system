@@ -8,7 +8,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-    <aside class="w-64 bg-gray-900 text-white h-screen fixed left-0 top-0">
+    <aside class="w-64 bg-gray-900 text-white h-screen fixed left-0 top-12">
         @include('partials.sidebar')
     </aside>
     <div class="flex-1 flex flex-col relative">

@@ -1,4 +1,6 @@
-@extends('guest.layouts.app')
+@extends('layouts.guest_layout')
+
+@section('title', 'Dashboard')
 
 @section('content')
 <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
