@@ -3,7 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
+<div class="max-w-8xl mx-auto py-6 sm:px-6 lg:px-8">
     <div class="px-4 py-6 sm:px-0">
         <div class="mb-6">
             <a href="{{ route('guest.bookings.index') }}" class="text-blue-600 hover:text-blue-900 mb-4 inline-block">
@@ -22,7 +22,7 @@
                             <input type="date" name="check_in_date" id="check_in_date" required
                                 min="{{ date('Y-m-d') }}"
                                 value="{{ old('check_in_date') }}"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                class="mt-1 py-2 px-3 border block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                             @error('check_in_date')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -33,48 +33,49 @@
                             <input type="date" name="check_out_date" id="check_out_date" required
                                 min="{{ date('Y-m-d', strtotime('+1 day')) }}"
                                 value="{{ old('check_out_date') }}"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                class="mt-1 py-2 px-3 border block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                             @error('check_out_date')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
-
-                    <div>
-                        <label for="room_type_id" class="block text-sm font-medium text-gray-700">Room Type</label>
-                        <select name="room_type_id" id="room_type_id" required
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                            <option value="">Select a room type</option>
-                            @foreach($roomTypes as $roomType)
-                                <option value="{{ $roomType->id }}" data-price="{{ $roomType->base_price }}"
-                                    {{ old('room_type_id') == $roomType->id ? 'selected' : '' }}>
-                                    {{ $roomType->name }} - ${{ number_format($roomType->base_price, 2) }}/night
-                                    (Max {{ $roomType->max_occupancy }} guests)
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('room_type_id')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="room_id" class="block text-sm font-medium text-gray-700">Available Rooms</label>
-                        <select name="room_id" id="room_id" required
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            disabled>
-                            <option value="">First select room type and dates</option>
-                        </select>
-                        @error('room_id')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                        <p class="mt-2 text-sm text-gray-500" id="room-help">Select your check-in date, check-out date, and room type to see available rooms.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="room_type_id" class="block text-sm font-medium text-gray-700">Room Type</label>
+                            <select name="room_type_id" id="room_type_id" required
+                                class="mt-1 py-2 px-3 border block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                <option value="">Select a room type</option>
+                                @foreach($roomTypes as $roomType)
+                                    <option value="{{ $roomType->id }}" data-price="{{ $roomType->base_price }}"
+                                        {{ old('room_type_id') == $roomType->id ? 'selected' : '' }}>
+                                        {{ $roomType->name }} - ${{ number_format($roomType->base_price, 2) }}/night
+                                        (Max {{ $roomType->max_occupancy }} guests)
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('room_type_id')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+    
+                        <div>
+                            <label for="room_id" class="block text-sm font-medium text-gray-700">Available Rooms</label>
+                            <select name="room_id" id="room_id" required
+                                class="mt-1 py-2 px-3 border block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                disabled>
+                                <option value="">First select room type and dates</option>
+                            </select>
+                            @error('room_id')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                            <p class="mt-2 text-sm text-gray-500" id="room-help">Select your check-in date, check-out date, and room type to see available rooms.</p>
+                        </div>
                     </div>
 
                     <div>
                         <label for="special_requests" class="block text-sm font-medium text-gray-700">Special Requests (Optional)</label>
                         <textarea name="special_requests" id="special_requests" rows="3"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            class="mt-1 py-2 px-3 border w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                             placeholder="Any special requests or preferences...">{{ old('special_requests') }}</textarea>
                         @error('special_requests')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
